@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lista de Confirmação (Resumo) - Essencial Print</title>
+    <style>
+        :root {
+            --verde-zap: #25d366;
+            --verde-dark: #128c7e;
+            --azul-essencial: #1e3a8a;
+            --azul-claro: #e7f5ff;
+            --azul-borda: #339af0;
+            --fundo-pagina: #f4f4f9;
+            --balao-cinza: #f1f3f5;
+            --texto-suave: #495057;
+        }
+
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--fundo-pagina); margin: 0; padding: 15px; color: #212529; width: 100%; overflow-x: hidden; }
+        .container { max-width: 500px; margin: 0 auto; background: #ffffff; padding: 20px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .logo-container { text-align: center; margin-bottom: 15px; }
+        .logo-container img { max-width: 180px; height: auto; }
+        h1 { text-align: center; color: var(--azul-essencial); font-size: 1.4rem; margin-bottom: 20px; text-transform: uppercase; }
+
+        .aviso-topo { background-color: var(--balao-cinza); color: #000; padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 0.9rem; line-height: 1.4; border-left: 5px solid #ced4da; }
+        .aviso-formatos { background-color: #f8f9fa; color: #666; padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; font-size: 0.8rem; line-height: 1.4; border: 1px solid #e9ecef; text-align: center; }
+        .aviso-azul { background-color: var(--azul-claro); color: var(--azul-essencial); padding: 10px 15px; border-radius: 10px; margin-bottom: 15px; font-size: 0.8rem; line-height: 1.4; border: 1px solid var(--azul-borda); text-align: center; font-weight: 600; }
+
+        .label-cliente { display: block; font-weight: 700; font-size: 0.85rem; color: var(--texto-suave); margin-bottom: 5px; }
+        input[type="text"], input[type="number"] { width: 100%; border: 2px solid #e1e8ef; border-radius: 10px; padding: 10px; box-sizing: border-box; font-size: 14px; outline: none; margin-top: 5px; }
+
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .secao-container { margin-top: 20px; border: 1px solid #eee; padding: 12px; border-radius: 12px; background: #fff; }
+        .titulo-secao { font-weight: bold; color: var(--azul-essencial); margin-bottom: 12px; border-bottom: 2px solid var(--azul-claro); font-size: 0.85rem; padding-bottom: 5px; }
+        
+        .grid-resumo { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .resumo-item { text-align: center; background: #fdfdfd; padding: 4px; border: 1px solid #eee; border-radius: 6px; }
+        .resumo-item span { font-size: 10px; font-weight: bold; color: #777; display: block; margin-bottom: 2px; }
+        .resumo-item input { padding: 5px; font-size: 15px; text-align: center; }
+
+        .check-container { background-color: #fff9db; padding: 12px; border-radius: 8px; margin-top: 20px; display: flex; align-items: flex-start; gap: 10px; font-size: 0.8rem; border: 1px solid #ffe066; }
+        .check-container input { width: 16px; height: 16px; margin-top: 2px; }
+
+        .btn-whatsapp { width: 100%; padding: 16px; background: var(--verde-zap); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
+
+        footer { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #adb5bd; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo-container">
+        <img src="logo.png" alt="Essencial Print">
+    </div>
+
+    <h1>LISTA DE CONFIRMAÇÃO</h1>
+    
+    <div class="aviso-topo">
+        Criamos este formulário para que seu pedido chegue perfeito. Ele envia tamanhos e quantidades direto para o nosso sistema, evitando desencontros de informações do WhatsApp. Assim, garantimos total precisão na sua confecção.
+    </div>
+
+    <div class="aviso-formatos">É mais precisão e agilidade para você!</div>
+    <div class="aviso-azul">⚠️ Os campos marcados com asterisco (*) são de preenchimento obrigatório.</div>
+
+    <div id="identificacao">
+        <label class="label-cliente">Nome do Cliente *</label>
+        <input type="text" id="nomeCliente" placeholder="Seu nome">
+    </div>
+
+    <div id="fluxoResumo">
+        <div class="secao-container">
+            <div class="titulo-secao">QUANTIDADE / NORMAIS</div>
+            <div class="grid-resumo" id="resumo-normais"></div>
+        </div>
+        <div class="secao-container">
+            <div class="titulo-secao">QUANTIDADE / BABY LOOK</div>
+            <div class="grid-resumo" id="resumo-baby"></div>
+        </div>
+        <div class="secao-container">
+            <div class="titulo-secao">QUANTIDADE / INFANTIL</div>
+            <div class="grid-resumo" id="resumo-infantil"></div>
+        </div>
+    </div>
+
+    <div class="check-container">
+        <input type="checkbox" id="minimoCheck">
+        <span>Estou ciente que a Essencial Print produz o mínimo de 10 unidades. Após informar os tamanhos não farei nenhuma alteração, pois entendo que isso pode atrasar a produção. *</span>
+    </div>
+
+    <button class="btn-whatsapp" onclick="enviarWhatsApp()">Enviar informações para o WhatsApp</button>
+
+    <footer>Esse formulário é criação exclusiva da <strong>Essencial Print</strong>.</footer>
+</div>
+
+<script>
+    const seuNumero = "5577999977481";
+    const tNormais = ["PP","P","M","G","GG","XG","XXG"];
+    const tBaby = ["BL PP","BL P","BL M","BL G","BL GG","BL XG","BL XXG"];
+    const tInfantil = ["2 anos","4 anos","6 anos","8 anos","10 anos","12 anos"];
+
+    function apenasNumeros(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    }
+
+    function formatarNumero(n) {
+        return n < 10 ? '0' + n : n;
+    }
+
+    function plural(n) {
+        return n === 1 ? 'unidade' : 'unidades';
+    }
+
+    function gerarGridsResumo() {
+        const montar = (lista, id) => {
+            let html = "";
+            lista.forEach(t => html += `
+                <div class="resumo-item">
+                    <span>${t}</span>
+                    <input type="number" class="qtd-res" data-tam="${t}" value="0" oninput="apenasNumeros(event)" onclick="if(this.value=='0')this.value=''">
+                </div>`);
+            document.getElementById(id).innerHTML = html;
+        };
+        montar(tNormais, 'resumo-normais');
+        montar(tBaby, 'resumo-baby');
+        montar(tInfantil, 'resumo-infantil');
+    }
+
+    gerarGridsResumo();
+
+    function enviarWhatsApp() {
+        const cliente = document.getElementById('nomeCliente').value.trim();
+        const checkMinimo = document.getElementById('minimoCheck').checked;
+
+        if(!cliente) { alert("Por favor, preencha o Nome do Cliente."); return; }
+        if(!checkMinimo) { alert("Você deve marcar o campo de ciência para prosseguir."); return; }
+
+        let totalGeral = 0;
+        let msgCorpo = "";
+
+        const grids = [
+            { id: 'resumo-normais', label: 'NORMAIS' },
+            { id: 'resumo-baby', label: 'BABY LOOK' },
+            { id: 'resumo-infantil', label: 'INFANTIS' }
+        ];
+
+        grids.forEach(grid => {
+            let secaoTxt = "";
+            let subtotal = 0;
+            document.getElementById(grid.id).querySelectorAll('.qtd-res').forEach(i => {
+                let v = parseInt(i.value) || 0;
+                if(v > 0) {
+                    secaoTxt += `${i.dataset.tam}: ${formatarNumero(v)}\n`;
+                    subtotal += v;
+                    totalGeral += v;
+                }
+            });
+            if(secaoTxt) msgCorpo += `*>> ${grid.label} - ${formatarNumero(subtotal)} ${plural(subtotal)}*\n${secaoTxt}\n`;
+        });
+
+        if(totalGeral < 10) {
+            alert("Você deve encaminhar, no mínimo, 10 unidades para prosseguir.");
+            return;
+        }
+
+        let msgFinal = `*LISTA DE CONFIRMAÇÃO*\n👤 *Cliente:* ${cliente.toUpperCase()}\n\n`;
+        msgFinal += msgCorpo;
+        msgFinal += `\n*TOTAL: ${formatarNumero(totalGeral)} ${plural(totalGeral)}*\n\n✅ _Ciente de que os dados seguem direto para a produção, não farei alterações para evitar erros ou atrasos na entrega._`;
+        
+        window.open(`https://wa.me/${seuNumero}?text=${encodeURIComponent(msgFinal)}`);
+    }
+</script>
+</body>
+</html>
