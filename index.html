@@ -46,6 +46,29 @@
 
         .btn-whatsapp { width: 100%; padding: 16px; background: var(--verde-zap); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 16px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
 
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 10000; padding: 20px;
+        }
+        .modal-content {
+            background: white; padding: 25px; border-radius: 20px;
+            max-width: 450px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+        .modal-content h3 { color: var(--azul-essencial); margin-top: 0; border-bottom: 2px solid var(--azul-claro); padding-bottom: 10px; font-size: 1.2rem; }
+        #resumo-final-texto { 
+            white-space: pre-wrap; font-size: 0.85rem; color: #444; 
+            max-height: 300px; overflow-y: auto; background: #f9f9f9; 
+            padding: 15px; border-radius: 10px; margin: 15px 0; border: 1px solid #eee;
+            font-family: monospace;
+        }
+        .modal-buttons { display: flex; gap: 10px; }
+        .modal-buttons button { flex: 1; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1rem; }
+        .btn-voltar { background: #e9ecef; color: #495057; }
+        .btn-confirmar { background: var(--verde-zap); color: white; }
+
         footer { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #adb5bd; }
     </style>
 </head>
@@ -53,7 +76,7 @@
 
 <div class="container">
     <div class="logo-container">
-        <img src="PHOTO-2025-12-29-14-28-58.jpeg" alt="Essencial Print">
+        <img src="logo.png" alt="Essencial Print">
     </div>
 
     <h1>LISTA DE CONFIRMAÇÃO</h1>
@@ -72,15 +95,15 @@
 
     <div id="fluxoResumo">
         <div class="secao-container">
-            <div class="titulo-secao">QUANTIDADE / NORMAIS</div>
+            <div class="titulo-secao">TAMANHOS NORMAIS</div>
             <div class="grid-resumo" id="resumo-normais"></div>
         </div>
         <div class="secao-container">
-            <div class="titulo-secao">QUANTIDADE / BABY LOOK</div>
+            <div class="titulo-secao">TAMANHOS BABY LOOK</div>
             <div class="grid-resumo" id="resumo-baby"></div>
         </div>
         <div class="secao-container">
-            <div class="titulo-secao">QUANTIDADE / INFANTIL</div>
+            <div class="titulo-secao">TAMANHOS INFANTIS</div>
             <div class="grid-resumo" id="resumo-infantil"></div>
         </div>
     </div>
@@ -90,9 +113,21 @@
         <span>Estou ciente que a Essencial Print produz o mínimo de 10 unidades. Após informar os tamanhos não farei nenhuma alteração, pois entendo que isso pode atrasar a produção. *</span>
     </div>
 
-    <button class="btn-whatsapp" onclick="enviarWhatsApp()">Enviar informações para o WhatsApp</button>
+    <button class="btn-whatsapp" onclick="prepararEnvio()">Enviar informações para o WhatsApp</button>
 
     <footer>Esse formulário é criação exclusiva da <strong>Essencial Print</strong>.</footer>
+</div>
+
+<div id="modalConfirmacao" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Confirmar Lista</h3>
+        <p style="font-size: 0.85rem; color: #666;">Confira as quantidades antes de enviar:</p>
+        <div id="resumo-final-texto"></div>
+        <div class="modal-buttons">
+            <button type="button" class="btn-voltar" onclick="fecharModal()">Corrigir</button>
+            <button type="button" class="btn-confirmar" onclick="confirmarEEnviar()">Confirmar e Enviar</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -100,6 +135,7 @@
     const tNormais = ["PP","P","M","G","GG","XG","XXG"];
     const tBaby = ["BL PP","BL P","BL M","BL G","BL GG","BL XG","BL XXG"];
     const tInfantil = ["2 anos","4 anos","6 anos","8 anos","10 anos","12 anos"];
+    let mensagemPronta = ""; 
 
     function apenasNumeros(e) {
         e.target.value = e.target.value.replace(/[^0-9]/g, '');
@@ -130,7 +166,16 @@
 
     gerarGridsResumo();
 
-    function enviarWhatsApp() {
+    function fecharModal() {
+        document.getElementById('modalConfirmacao').style.display = 'none';
+    }
+
+    function confirmarEEnviar() {
+        window.open(`https://wa.me/${seuNumero}?text=${encodeURIComponent(mensagemPronta)}`);
+        fecharModal();
+    }
+
+    function prepararEnvio() {
         const cliente = document.getElementById('nomeCliente').value.trim();
         const checkMinimo = document.getElementById('minimoCheck').checked;
 
@@ -169,7 +214,9 @@
         msgFinal += msgCorpo;
         msgFinal += `\n*TOTAL: ${formatarNumero(totalGeral)} ${plural(totalGeral)}*\n\n✅ _Ciente de que os dados seguem direto para a produção, não farei alterações para evitar erros ou atrasos na entrega._`;
         
-        window.open(`https://wa.me/${seuNumero}?text=${encodeURIComponent(msgFinal)}`);
+        mensagemPronta = msgFinal;
+        document.getElementById('resumo-final-texto').innerText = msgFinal;
+        document.getElementById('modalConfirmacao').style.display = 'flex';
     }
 </script>
 </body>
